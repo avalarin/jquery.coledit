@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="static/jquery/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="static/jquery.coledit.js"></script>
+        <script type="text/javascript" src="static/main.js"></script>
+    </head>
+    <body>
+        <form>
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" name="name" placeholder="Your name"/>
+            </div>
+
+            <div id="phones">
+                <div role="template">
+                    <a href="javascript:" role="removeItem">Remove</a>
+                    <label for="phone[#]">Phone:</label>
+                    <input type="text" name="phone[#]"/>
+                </div>
+                <a href="javascript:" role="addItem">Add phone</a>
+                <div role="items"></div>
+            </div>
+
+            <div id="emails" class="coledit">
+                <div role="template">
+                    <a href="javascript:" role="removeItem">Remove</a>
+                    <label data-template-for="email[#]">Email #:</label>
+                    <input type="text" data-template-name="email[#]"/>
+                </div>
+                <a href="javascript:" role="addItem">Add email</a>
+                <div role="items"></div>
+            </div>
+            <input type="submit"/>
+        </form>
+    </body>
+</html>
