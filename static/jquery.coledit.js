@@ -22,7 +22,7 @@
             this.addClass('coledit').data('coledit', exOptions);
             prepareTemplate($('[role=template]', this).hide());
             $('[role=addItem]', this).click(function() {
-                addItem(getRoot($(this)), true);
+                addItem(getRoot($(this)));
             });
             $('[role=removeItem]', this).click(function() {
                 removeItem($(this));
@@ -32,13 +32,13 @@
             });
             var countForAdd = exOptions.defaultItems - count(this);
             for (var i = 0; i < countForAdd; i++) {
-                addItem(this, false);
+                addItem(this);
             }
             updateItems(this);
             return this;
         },
         addItem : function() {
-            return addItem(getRoot(this), true);
+            return addItem(getRoot(this));
         },
         removeItem : function() {
             removeItem(this);
@@ -49,7 +49,7 @@
         }
     };
 
-    function addItem(root, update) {
+    function addItem(root) {
         var options = root.data('coledit');
         if (options.maxItems > -1 && count(root) >= options.maxItems) {
             return undefined;
@@ -63,11 +63,9 @@
         $('[role=removeItem]', item).click(function() {
             methods.removeItem.apply( $(this) );
         });
-        if (update) {
-            updateItems(root);
-        }
+        updateItems(root);
         if (typeof(options.onAddItem) != 'undefined') {
-            options.onAddItem(item.get(), count(root));
+            options.onAddItem(item.get(), count(root) - 1);
         }
         return item;
     }
