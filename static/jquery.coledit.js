@@ -30,6 +30,12 @@
             $('[role=item]',this).each( function(index, item) {
                 prepareTemplate($(item));
             });
+            updateItems($(this));
+            if (typeof(exOptions.onAddItem) != 'undefined') {
+                $('[role=item]',this).each( function(index, item) {
+                    options.onAddItem(item, index);
+                });
+            }
             var countForAdd = exOptions.defaultItems - count(this);
             for (var i = 0; i < countForAdd; i++) {
                 addItem(this);
