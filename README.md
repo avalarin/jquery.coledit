@@ -27,8 +27,11 @@ JQuery.Coledit
 
 1. При инициализации в options.template.
 2. Определив эелемент с атрибутом [role=template], при этом в качестве шаблона будет использоваться весь элемент, аттрибут role будет удален. Пример:
-  `<div class="users">`
-  `  <div role="template>`
-  `    ...`
-  `  </div>`
-  `</div>`
+
+``` html
+<div class="users">
+  <div role="template">
+    ...
+  </div>
+</div>
+```
