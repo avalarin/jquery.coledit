@@ -2,32 +2,36 @@
 
     var methods = {
         init : function(options) {
+            var savedOptions = this.data('coledit');
+            if (typeof(savedOptions) != 'undefined') { // already initialized
+                this.data('coledit', $.extend(savedOptions, options));
+                return;
+            }
+            
             var exOptions = $.extend({
                 minItems: 0,
                 maxItems: -1,
                 defaultItems: 0,
-                btnAutoHide: true
+                btnAutoHide: true,
+                template: 'template'
             }, options);
-            var savedOptions = this.data('coledit');
-            if (typeof(savedOptions) != 'undefined') { // already initialized
-                this.data('coledit', exOptions);
-                return;
+                                    
+            if ($('[role=template]', this).length !== 0){
+                var template = $('[role=template]', this);           
+                //prepareTemplate(template);
+                exOptions.template = $('<div>').append(template.clone()).html();
+                template.remove();
             }
-            if ($('[role=template]', this).length === 0){
-                $.error('Template element not found (element with role=template).');
-            }
-            if ($('[role=items]', this).length === 0){
-                $.error('Items element not found (element with role=items).');
-            }
+            
             this.addClass('coledit').data('coledit', exOptions);
-            prepareTemplate($('[role=template]', this).hide());
+                        
             $('[role=addItem]', this).click(function() {
                 addItem(getRoot($(this)));
             });
             $('[role=removeItem]', this).click(function() {
                 removeItem($(this));
             });
-            $('[role=item]',this).each( function(index, item) {
+            $('[role=item]',this).each(function(index, item) {
                 prepareTemplate($(item));
             });
             updateItems($(this));
@@ -61,18 +65,25 @@
             return undefined;
         }
         var items = $('[role=items]', root);
-        var item = $('[role=template]', root)
-            .clone()
-            .show()
+        if (items.length === 0) {
+            items = root;
+        }
+        var template = $(options.template);
+        prepareTemplate(template);
+        var item = template
             .attr('role', 'item')
             .appendTo(items);
+        
         $('[role=removeItem]', item).click(function() {
             methods.removeItem.apply( $(this) );
         });
+        
         updateItems(root);
+        
         if (typeof(options.onAddItem) != 'undefined') {
             options.onAddItem(item.get(), count(root) - 1);
         }
+        
         return item;
     }
 
@@ -90,7 +101,7 @@
     }
 
     function count(root) {
-        return $('[role=items] [role=item]', root).length;
+        return $('[role=item]', root).length;
     }
 
     function getRoot(element) {
@@ -111,7 +122,7 @@
                 $('[role=removeItem]', root).show();
             }
         }
-        $('[role=items] [role=item]', root).each(function (index, item){
+        $('[role=item]', root).each(function (index, item){
             $('*', item).each(function(i1, element) {
                 var templates = {};
                 for (var i=0, attrs=element.attributes, l=attrs.length; i<l; i++){
@@ -149,7 +160,14 @@
             }
             $(el).attr(templateAttrs);
         });
+        return element;
     }
+    function outerHtml(s){
+        return (s)
+        ? this.before(s).remove()
+        : jQuery("&lt;p&gt;").append(this.eq(0).clone()).html();
+    }
+
 
     $.fn.coledit = function (method) {
         if ( methods[method] ) {
@@ -159,9 +177,5 @@
         } else {
           $.error( 'Method with name ' +  method + ' not found.' );
         }
-    };
-
-    $(document).ready(function(){
-        $('.coledit').coledit();
-    });
+    };    
 })(jQuery);
